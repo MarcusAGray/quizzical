@@ -1,73 +1,90 @@
-import React, { useEffect, useState } from "react"
-import Question from "./Question"
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom";
+import Page from "./Page"
+import "./Quiz.css"
 
-function Quiz({trivia, quizOn, setQuizOn, numOfQs}) {
+function Quiz({trivia, quizOn, setQuizOn}) {
 
-  const [pageNumber, setPageNumber] = useState(1)
-  const [page, setPage] = useState(trivia[pageNumber - 1])
 
-  let ids = []
-  const [allAnswers, setAllAnswers] = useState(setUpAllAnswers(ids))
+  const [allAnswersData, setAllAnswersData] = useState(setUpAllAnswersData())
+  
+  const [pageNumber, setPageNumber] = useState(0)
 
-  function setUpAllAnswers(ids) {
-    for(let i = 0; i < numOfQs; i++) {
-      ids.push(`q${i}`)
-    }
+  let navigate = useNavigate()
 
-    let answers = {}
-    for(let i = 0; i < ids.length; i++) {
-      answers[ids[i]] = false
-      //answers[ids[i]] = {wasCorrect: false, category: trivia... }
-    }
-    return answers
+  function setUpAllAnswersData() {
+    let triviaFlat = trivia.flat()
+    let data = triviaFlat.map((ques, index) => {
+      let ans = {
+              id: ques.id, 
+              qNum: index,
+              correctAnswer: ques.correct_answer,
+              selectedAnswer: null,
+              selAnsIdx: null
+              }
+      return ans
+    })
+
+    return data
   }
 
-  function next() {
-    console.log("Next clicked")
-    console.log(trivia, trivia.length, pageNumber)
-    if(pageNumber == (trivia.length)) return
-    
-    setPage(trivia[pageNumber])
-    setPageNumber(pageNumber + 1)
-    window.scrollTo(0, 0);
+
+  function calcScore() {
+    let score = 0
+    allAnswersData.forEach(obj => {
+      if(obj.correctAnswer == obj.selectedAnswer) score +=1
+    })
+    return `${score}/${trivia.flat().length}`
+
+  }
+
+  function endQuiz() {
+    setQuizOn(false)
   }
 
   function prev() {
-    if(pageNumber == 1) return
-    setPage(trivia[pageNumber - 2])
+    if(pageNumber == 0) return
     setPageNumber(pageNumber - 1)
     window.scrollTo(0, 0);
   }
 
-  function calcScore() {
-    const score = Object.values(allAnswers).filter(a => a == true).length
-    return `${score}/${numOfQs}`
-
+  function next() {
+    if(pageNumber == (pages.length - 1)) return
+    setPageNumber(pageNumber + 1)
+    window.scrollTo(0, 0);
   }
 
+  const pages = trivia.map((page, index) => {
+                    let id = `p${index}`
+                    return (
+                      <Page 
+                        key={id}
+                        pageQuestions={page}
+                        pageNumber={pageNumber}
+                        quizOn={quizOn}
+                        allAnswersData={allAnswersData}
+                        setAllAnswersData={setAllAnswersData}
+                      />
+                    )
+  })
+
+  function newQuiz() {
+    navigate("/")
+  }
+                  
+
   return (
-    <div>
-      <h2>Quiz title</h2>
-      {page.map((triviaQ, index) => <Question 
-                                    key={ids[index + ((pageNumber-1) * 5)]}
-                                    id={ids[index + ((pageNumber-1) * 5)]}
-                                    category={triviaQ.category}
-                                    question={triviaQ.question}
-                                    correctAnswer={triviaQ.correct_answer}
-                                    answers={triviaQ.answers}
-
-                                    // activeAns
-
-                                    allAnswers={allAnswers}
-                                    setAllAnswers={setAllAnswers}
-                                  />)}
-      <button onClick={() => console.log(allAnswers)}>DEBUG: Show Answers</button>
-
-      <button onClick={prev}>Prev</button>
-      <button onClick={next}>Next</button>
-      {pageNumber == (trivia.length) && <button onClick={() => setQuizOn(false)}>Finish Quiz</button>}
-      {!quizOn && <p>{calcScore()}</p>}
+    <div className="quiz-container">
+      {pages[pageNumber]}
+      <div className='page-nav'>
+        <button onClick={prev} className="nav-btn">Prev</button>
+        {quizOn && <button onClick={endQuiz} className="check-ans-btn">Check Answers</button>}
+        {!quizOn && <div class="end-game">
+          <p className="score">You scored {calcScore()} correct answers</p>
+          <button onClick={newQuiz} className="play-again-btn">Play again</button>
+        </div>}
+        <button onClick={next} className="nav-btn">Next</button>
+      </div>
     </div>
   )
 }

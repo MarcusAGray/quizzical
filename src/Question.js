@@ -1,42 +1,65 @@
-import React, { useState } from "react"
-import Answer from "./Answer"
+import React, { useEffect, useState } from "react"
+import Answer from './Answer'
+
+function Question({questionId, quizOn, question, pageNumber, correctAnswer, QAnswers, allAnswersData, setAllAnswersData}) {
 
 
-function Question({id, category, question, correctAnswer, answers, allAnswers, setAllAnswers}) {
-
-
-  // const [activeAnswer, setActiveAnswer] = useState(false)
-  const [selectedAnsIndex, setSelectedAnsIndex] = useState(null)
-
-  function handleClick(answerIndex) {
-    let newActiveAnswer = answers[answerIndex]
-    // setActiveAnswer(newActiveAnswer)
-  
-    const obj = allAnswers
-
-    obj[id] = (newActiveAnswer == correctAnswer) ? true : false
-
-    setAllAnswers(obj)
-    setSelectedAnsIndex(answerIndex)
+  function updateData(index, ans) {
+    if(!quizOn) return
+    const data = [...allAnswersData]
+    const questionObj = data.find(obj => obj.id == questionId)
+    questionObj.selAnsIdx = index
+    questionObj.selectedAnswer = ans
+    setAllAnswersData(data)
   }
 
+
+  function getAnswerObject() {
+    let a = allAnswersData.find(ans => ans.id == questionId)
+    return a
+  }
+
+ 
+  function evaluateAns() {
+    let answerObj = getAnswerObject()
+    let correctAnswer = answerObj.correctAnswer
+    let selectedAnswer = QAnswers[answerObj.selAnsIdx]
+    if(selectedAnswer == null) return 'No answer selected'
+    if(correctAnswer == selectedAnswer) return 'Correct'
+    return 'Incorrect'
+  }
+
+
+ 
+
+  const answersArr = QAnswers.map((ans, index) => {
+    let ans_id = `a${index + (pageNumber * 5)}`
+    return (
+        <Answer 
+          key={ans_id}
+          id={ans_id}
+          quizOn={quizOn}
+          answer={ans}
+          action={updateData}
+          allAnswersData={allAnswersData}
+          setAllAnswersData={setAllAnswersData}
+          questionId={questionId}
+          index={index}
+        />
+    )
+})
+
   return (
-    <div>
-      <h6>Question Component</h6>
-      <p>{question}</p>
-      <ul>
-        {answers.map((ans, index) => {
-            return (
-              <Answer 
-                key={`a${index}`}
-                id={`a${index}`}
-                answer={ans}
-                action={() => handleClick(index)}
-                style={selectedAnsIndex == index ? 'selected' : 'unselected'}
-              />
-            )
-        })}
+    <div className="question-container">
+      <div className="ques-and-num-container">
+        <p className="question-number">Q{(getAnswerObject().qNum) + 1}.</p>
+        <p className="question"> {question}</p>
+      </div>
+      <ul className="answer-list">
+        {answersArr}
       </ul>
+      <p className="evaluation">{quizOn ? <br/> : evaluateAns()}</p>
+      <hr className="line"/>
     </div>
   )
 }

@@ -1,0 +1,136 @@
+
+.quiz-container {
+  padding: 60px 200px;
+}
+
+.question-container {
+  margin-bottom: 20px;
+}
+
+.ques-and-num-container {
+  display: flex;
+}
+
+.question-number {
+  font-weight: bold;
+  color: #293264;
+  font-family: 'Karla', sans-serif;
+  margin-right: 5px;
+}
+
+.question {
+  display: inline-block;
+  color: #293264;
+  max-width: 700px;
+
+  font-family: 'Karla', sans-serif;
+
+  margin-bottom: 5px;
+}
+
+.answer-list {
+  padding: 15px 0;
+  list-style-type: none;  
+}
+
+.answer-list * {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+
+.answer-list button {
+  line-height: 12px;
+  padding: 8px 0.9rem;
+  margin-top: 5px
+}
+
+.end-game * {
+  display: inline;
+}
+
+.score {
+  margin-right: 15px;
+  font-family: 'Karla', sans-serif;
+  color: #293264;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.play-again-btn {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem
+}
+
+
+
+/*DYNAMIC STYLINGS FOR QUIZ BUTTONS */
+.unselected {
+  background-color: transparent;
+  color: #293264;
+  outline: 1px solid #4D5B9E;
+}
+
+.selected {
+  background-color: #bbbdc7;
+  color: #293264;
+
+}
+
+.correctSelected {
+  background-color: #94D7A2;
+  color: #293264;
+
+}
+
+.correctUnselected {
+  outline: 3px dotted #6dcc81;
+  color: #293264;
+  background-color: transparent;
+}
+
+.incorrectSelected {
+  color: #293264;
+  background-color: #F8BCBC;
+}
+
+
+
+
+
+.evaluation {
+  padding-left: 10px;
+  color: #293264;
+  font-size: 1.3rem;
+}
+
+.page-number {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #293264;
+  float: right;
+  margin-top: 80px;
+}
+
+
+.page-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 auto 30px;
+}
+
+.check-ans-btn {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+
+}
+
+.nav-btn {
+  font-size: 0.8rem;
+  height: 30px;
+}
+
+.line {
+  opacity: 40%;
+}

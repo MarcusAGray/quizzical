@@ -1,8 +1,7 @@
 import './App.css';
 import Start from './Start'
 import Quiz from './Quiz'
-import Results from './Results'
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import {
   BrowserRouter as Router,
@@ -14,22 +13,17 @@ function App() {
 
   const [trivia, setTrivia] = useState([])
   const [quizOn, setQuizOn] = useState(false)
-  const [numOfQs, setNumOfQs] = useState(10)
+  const [sessionToken, setSessionToken] = useState(null)
 
 
-  // function upDateTrivia(triviaQ) {
-  //   let upDatedTrivia = trivia
-  //   trivia.forEach(group => {
-  //     group.forEach(questionObj => {
-  //       let answers = [...questionObj.incorrect_answers]
-  //       answers.push(questionObj.correct_answer)
-  //       answers.sort(() => Math.random() - 0.5);
-  //       questionObj.answers = answers
-  //     })
-  //   })
-  //   setTrivia(questionObj)
-    
-  // }
+  //get session token to avoid repeated question
+  useEffect(() => {
+    fetch("https://opentdb.com/api_token.php?command=request")
+    .then(res => res.json())
+    .then(res => {
+      setSessionToken(res.token)
+    })
+  }, [])
 
   return(
 
@@ -39,16 +33,16 @@ function App() {
             <Route path="/" element={<Start setTrivia={setTrivia} 
                                             quizOn={quizOn}
                                             setQuizOn={setQuizOn}
-                                            numOfQs={numOfQs}
+                                            sessionToken={sessionToken}
                                             />} 
             />
-            <Route path="/quiz" element={<Quiz trivia={trivia}
+            <Route path="/quiz" element={<Quiz 
+                                              trivia={trivia}
                                               quizOn={quizOn}
                                               setQuizOn={setQuizOn}
-                                              numOfQs={numOfQs}
                                         />} 
             />
-            <Route path="/results" element={<Results/>} />
+            {/* <Route path="/results" element={<Results/>} /> */}
 
           </Routes>
       </div>
