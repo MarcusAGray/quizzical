@@ -1,6 +1,5 @@
 <h1>Quizzical</h1>
 
-<a href="https://quizzical-mag.herokuapp.com/"> Link </a>
 
 A quiz based game built using React
 
