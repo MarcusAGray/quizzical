@@ -1,7 +1,9 @@
 <h1>Quizzical</h1>
 
 
-A quiz based game built using React
+A quiz based game built using React.
+
+<b>Available to view <a href="https://quizzical-mag2.herokuapp.com/">here</a>.</b>
 
 <img src="https://user-images.githubusercontent.com/17533749/174472849-c87c2686-6417-47cd-be8c-d70f3aead5be.png" width="500">
 
